@@ -58,6 +58,33 @@
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
 <script>
+  const keys = document.querySelectorAll('.key');
+  
+  function play(e){
+    const audio = document.querySelector(`audio[data-key= "${e.keyCode}"]`); //Select audio element if it matches existing data key
+    if(!audio) return; //if no audio element is matched, exit function
+    audio.currentTime = 0; //Resets audio to start value
+    audio.play(); //Plays audio file
+ 
+    const pad = document.querySelector(`.key[data-key= "${e.keyCode}"]`);
+    pad.classList.add('playing');
+  }
+
+  function removeTransition(e){
+    if (e.propertyName !== 'transform') return; //skip if its not a transform
+    this.classList.remove('playing'); //remove playing class from keypad
+  }
+
+  function triggerKeydown(e){
+    window.dispatchEvent(new KeyboardEvent('keydown', {
+    'keyCode': `${this.dataset.key}`
+}));
+  }
+
+
+  window.addEventListener('keydown', play)
+  keys.forEach(key => key.addEventListener('click', triggerKeydown))
+  keys.forEach(key => key.addEventListener('transitionend', removeTransition))
 
 </script>
 
